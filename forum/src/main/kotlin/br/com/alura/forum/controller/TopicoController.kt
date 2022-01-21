@@ -3,6 +3,8 @@ package br.com.alura.forum.controller
 import br.com.alura.forum.dto.TopicoInput
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.service.TopicoService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -21,6 +23,7 @@ class TopicoController(
 ) {
 
     @GetMapping
+    @Cacheable("topicos")
     fun listar(
         @RequestParam(required = false) nomeCurso: String?,
         @PageableDefault(
@@ -37,6 +40,7 @@ class TopicoController(
 
     @PostMapping
     @Transactional
+    @CacheEvict(value = ["topicos"], allEntries = true)
     fun cadastrar(
         @Valid @RequestBody input: TopicoInput,
         uriComponentsBuilder: UriComponentsBuilder
@@ -48,6 +52,7 @@ class TopicoController(
 
     @PutMapping("/{id}")
     @Transactional
+    @CacheEvict(value = ["topicos"], allEntries = true)
     fun atualizar(@PathVariable id: Long, @Valid @RequestBody input: TopicoInput): ResponseEntity<TopicoView> {
         return ResponseEntity.ok(service.atualizar(id, input));
     }
@@ -55,6 +60,7 @@ class TopicoController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = ["topicos"], allEntries = true)
     fun excluir(@PathVariable id: Long) {
         return service.excluir(id);
     }
