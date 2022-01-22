@@ -6,3 +6,4 @@ create table curso (
 );
 
 insert into curso(id, nome, categoria) values (1, 'Kotlin', 'Programação');
+insert into curso(id, nome, categoria) values (2, 'HTML', 'Front-end');
